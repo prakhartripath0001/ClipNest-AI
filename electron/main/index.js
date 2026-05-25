@@ -27,6 +27,7 @@ const {
   globalShortcut,
   Menu,
   Tray,
+  screen,
 } = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
@@ -64,9 +65,15 @@ let tray = null;
  * - Hardware acceleration enabled
  */
 function createOverlayWindow() {
+  // Get the primary display
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+
   overlayWindow = new BrowserWindow({
     width: 500,
     height: 600,
+    x: Math.round(screenWidth / 2 - 250), // Center horizontally
+    y: Math.round(screenHeight / 2 - 300), // Center vertically
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -76,8 +83,10 @@ function createOverlayWindow() {
     frame: false, // Frameless window
     transparent: true, // Transparent background for custom styling
     alwaysOnTop: true, // Always show on top of other windows
-    skipTaskbar: true, // Don't show in taskbar
+    skipTaskbar: false, // Show in taskbar for visibility
     show: false, // Don't show until ready
+    resizable: true,
+    movable: true,
   });
 
   // Load the React app
@@ -92,15 +101,23 @@ function createOverlayWindow() {
     overlayWindow.webContents.openDevTools({ mode: 'detach' });
   }
 
+  // Log window events for debugging
+  overlayWindow.webContents.on('did-finish-load', () => {
+    console.log('Overlay window content loaded successfully');
+  });
+
+  overlayWindow.webContents.on('crashed', () => {
+    console.error('Overlay window crashed');
+  });
+
   // Handle window closed
   overlayWindow.on('closed', () => {
+    console.log('Overlay window closed');
     overlayWindow = null;
   });
 
-  // Hide when focus is lost (for overlay-like behavior)
-  overlayWindow.on('blur', () => {
-    overlayWindow.hide();
-  });
+  // Don't hide on blur - user controls visibility
+  // Removed the blur event listener
 
   return overlayWindow;
 }
