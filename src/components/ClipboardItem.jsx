@@ -18,26 +18,22 @@
 
 import React, { useState } from 'react';
 
-// Type badge colors and icons
+// Type badge colors and config
 const TYPE_CONFIG = {
   text: {
     color: 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
-    icon: '📝',
-    label: 'Text',
+    label: 'TEXT',
   },
   code: {
     color: 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200',
-    icon: '💻',
-    label: 'Code',
+    label: 'CODE',
   },
   image: {
     color: 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
-    icon: '🖼️',
-    label: 'Image',
+    label: 'IMAGE',
   },
   url: {
     color: 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
-    icon: '🔗',
     label: 'URL',
   },
 };
@@ -60,7 +56,9 @@ export function ClipboardItem({
     const diff = now - date;
 
     // Less than a minute
-    if (diff < 60000) return 'Just now';
+    if (diff < 60000) {
+      return 'Just now';
+    }
 
     // Less than an hour
     if (diff < 3600000) {
@@ -111,16 +109,16 @@ export function ClipboardItem({
         <div className="flex items-center gap-2">
           {/* Type badge */}
           <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${typeConfig.color}`}>
-            {typeConfig.icon} {typeConfig.label}
+            {typeConfig.label}
           </span>
 
           {/* Favorite star */}
           <button
             onClick={() => onToggleFavorite(item.id)}
             className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors"
-            title={item.is_favorite ? 'Unfavorite' : 'Favorite'}
+            title={item.is_favorite ? 'Remove favorite' : 'Add to favorites'}
           >
-            {item.is_favorite ? '⭐' : '☆'}
+            {item.is_favorite ? '★' : '☆'}
           </button>
         </div>
 

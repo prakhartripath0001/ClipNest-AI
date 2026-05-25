@@ -37,6 +37,12 @@ export function useClipboard() {
     try {
       setLoading(true);
       setError(null);
+      // Check if window.api is available (running in Electron)
+      if (!window.api || !window.api.clipboard) {
+        console.warn('window.api not available - running in dev mode without Electron');
+        setItems([]);
+        return;
+      }
       const data = await window.api.clipboard.getItems(limit, offset);
       setItems(data);
     } catch (err) {
@@ -48,6 +54,10 @@ export function useClipboard() {
   }, []);
 
   const copy = useCallback(async (id) => {
+    if (!window.api || !window.api.clipboard) {
+      console.warn('window.api not available');
+      return;
+    }
     try {
       await window.api.clipboard.copy(id);
       console.log('Item copied:', id);
@@ -58,6 +68,10 @@ export function useClipboard() {
   }, []);
 
   const deleteItem = useCallback(async (id) => {
+    if (!window.api || !window.api.clipboard) {
+      console.warn('window.api not available');
+      return;
+    }
     try {
       await window.api.clipboard.delete(id);
       setItems(items.filter(item => item.id !== id));
@@ -68,6 +82,10 @@ export function useClipboard() {
   }, [items]);
 
   const toggleFavorite = useCallback(async (id) => {
+    if (!window.api || !window.api.clipboard) {
+      console.warn('window.api not available');
+      return;
+    }
     try {
       const updated = await window.api.clipboard.toggleFavorite(id);
       setItems(items.map(item => item.id === id ? updated : item));
@@ -77,6 +95,10 @@ export function useClipboard() {
   }, [items]);
 
   const getFavorites = useCallback(async () => {
+    if (!window.api || !window.api.clipboard) {
+      console.warn('window.api not available');
+      return [];
+    }
     try {
       setLoading(true);
       const data = await window.api.clipboard.getFavorites();
@@ -125,6 +147,10 @@ export function useSettings() {
   const getAll = useCallback(async () => {
     try {
       setLoading(true);
+      if (!window.api || !window.api.settings) {
+        console.warn('window.api not available');
+        return {};
+      }
       const data = await window.api.settings.getAll();
       setSettings(data);
       return data;
@@ -137,6 +163,10 @@ export function useSettings() {
 
   const set = useCallback(async (key, value) => {
     try {
+      if (!window.api || !window.api.settings) {
+        console.warn('window.api not available');
+        return;
+      }
       await window.api.settings.set(key, value);
       setSettings(prev => ({ ...prev, [key]: value }));
     } catch (err) {
@@ -146,6 +176,10 @@ export function useSettings() {
 
   const get = useCallback(async (key, defaultValue) => {
     try {
+      if (!window.api || !window.api.settings) {
+        console.warn('window.api not available');
+        return defaultValue;
+      }
       return await window.api.settings.get(key, defaultValue);
     } catch (err) {
       console.error('Error getting setting:', err);
@@ -199,6 +233,11 @@ export function useDarkMode() {
  */
 export function useClipboardListener(callback) {
   useEffect(() => {
+    // Check if window.api is available (running in Electron)
+    if (!window.api || !window.api.onClipboardUpdate) {
+      console.warn('window.api.onClipboardUpdate not available - running in dev mode without Electron');
+      return () => {};
+    }
     const unsubscribe = window.api.onClipboardUpdate(callback);
     return unsubscribe;
   }, [callback]);

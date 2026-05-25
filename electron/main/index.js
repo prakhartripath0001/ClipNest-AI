@@ -70,7 +70,7 @@ function createOverlayWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload/preload.js'),
+      preload: path.join(__dirname, '../preload/preload.js'),
       enableRemoteModule: false,
     },
     frame: false, // Frameless window

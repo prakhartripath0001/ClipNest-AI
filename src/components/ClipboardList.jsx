@@ -30,7 +30,9 @@ export function ClipboardList({
 
   // Infinite scroll - load more items when reaching bottom
   useEffect(() => {
-    if (!loadMoreRef.current || !hasMore || loading) return;
+    if (!loadMoreRef.current || !hasMore || loading) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {

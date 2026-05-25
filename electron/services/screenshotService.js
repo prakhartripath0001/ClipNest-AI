@@ -202,16 +202,22 @@ function startMonitoring(folder = null) {
 
   try {
     // Use fs.watch to monitor folder
+    // Watch for both 'change' and 'rename' events (macOS uses rename for new files)
     screenshotWatcher = watch(screenshotFolder, { recursive: false }, (eventType, filename) => {
-      if (eventType === 'change' && filename) {
-        const filePath = path.join(screenshotFolder, filename);
+      if (!filename) return;
+      
+      const filePath = path.join(screenshotFolder, filename);
 
-        // Add small delay to ensure file is fully written
-        setTimeout(() => {
-          if (isScreenshot(filename)) {
-            processScreenshot(filePath);
+      // macOS triggers 'rename' event for new files, others use 'change'
+      if ((eventType === 'change' || eventType === 'rename') && isScreenshot(filename)) {
+        // Add delay to ensure file is fully written
+        setTimeout(async () => {
+          try {
+            await processScreenshot(filePath);
+          } catch (err) {
+            console.error('Error processing screenshot:', err);
           }
-        }, 500);
+        }, 800);
       }
     });
 
