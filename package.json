@@ -2,7 +2,7 @@
   "name": "clipnest-ai",
   "version": "1.0.0",
   "description": "AI-first clipboard and screenshot manager for enhanced productivity",
-  "main": "dist/electron/main/index.js",
+  "main": "index.js",
   "homepage": "./",
   "author": "ClipNest AI",
   "license": "MIT",
