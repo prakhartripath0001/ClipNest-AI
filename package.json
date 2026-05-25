@@ -28,25 +28,23 @@
     "react-scripts": "5.0.1",
     "electron-squirrel-startup": "^1.1.0",
     "sqlite3": "^5.1.6",
-    "sqlite": "^5.0.1",
     "tesseract.js": "^4.1.1",
     "sharp": "^0.32.5",
     "uuid": "^9.0.0",
-    "electron-is-dev": "^2.0.0",
-    "path": "^0.12.7"
+    "electron-is-dev": "^2.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "electron": "^25.0.0",
     "electron-builder": "^24.6.4",
-    "electron-devtron": "^1.4.0",
     "concurrently": "^8.2.0",
     "wait-on": "^7.0.1",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "eslint": "^8.48.0"
   },
   "build": {
     "appId": "com.clipnest.ai",
